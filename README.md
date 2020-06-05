@@ -17,26 +17,26 @@ For detailed installation instructions see the getting started guide found [here
 
 To install pygame, from the commandline run::
 ```
-py -m pip install -U pygame --user
+$ py -m pip install -U pygame --user
 ```
 
 #### Linux
 
 From the commandline run::
 ```
-pip3 install -U pygame --user
+$ pip3 install -U pygame --user
 ```
 
 #### Mac OS X
 
 From the command line run::
 ```
-python3 -m pip install -U pygame==2.0.0.dev6 --user
+$ python3 -m pip install -U pygame==2.0.0.dev6 --user
 ```
 
 ## Run the game:
 
 To run the game we only need to execute the `Fishy.py` file::
 ```
-python Fishy.py
+$ python Fishy.py
 ```
