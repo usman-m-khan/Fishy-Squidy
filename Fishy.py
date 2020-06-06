@@ -18,12 +18,12 @@ W=2
 H=3
 S=4
 
-game="menu"
+game="menu"             #This holds what game modeis being run
 
 fish=[400,300,30,15,0]    #coordinate of fish and its width and height
 vel=[0,0]               #The speed of the fish [hor speed, vert speed]
 accel=[0,0]             #Acceleration of the fish [hor accel,vert,accel]
-fishyPic=image.load("images/fishyPre.png")
+fishyPic=image.load("images/fishy.png")
 
 bonesPic=image.load("images/bones.png")         #loading in bone picture
 bonesSize=transform.scale(bonesPic,(100,50))    #Scaling in to a diffrent size
@@ -51,8 +51,8 @@ sharkPic=image.load("images/shark.png")     #Loading in image
 sharkImage=transform.scale(sharkPic,(shark[W],shark[H]))#Changing size
 
 rMenu=Rect(10,10,50,50)             #The rect displayed to go back to the menu
-homePic=image.load("images/home.png")
-homeImage=transform.scale(homePic,(50,50))
+homePic=image.load("images/home.png")#loading the image to return to menu
+homeImage=transform.scale(homePic,(50,50))#Scaling the image
 retry=Rect(375,365,50,50)          #The rect displayed to retry the game
 restartPic = image.load("images/restart.png")
 restartImage=transform.scale(restartPic,(50,50))
@@ -86,7 +86,7 @@ pause=0                         #Status of the pause screen
 pauseMenu=Rect(300,200,200,20)  #Pause button to go to menu
 pauseRetry=Rect(300,300,200,20) #Pause button to retry
 
-#These lines of code loads in all the images and scale them to the screen
+#These lines of code loads in all the background images and scale them to the screen
 backgroundPics=[]
 backgroundInd=0
 for i in range(5):
@@ -100,12 +100,13 @@ fishyBackground=transform.scale(fishyBackgroundLoad,(width,height))
 squidBackgroundLoad=image.load("images/squidBackground.jpg").convert()
 squidBackground=transform.scale(squidBackgroundLoad,(width,height))
 
-arrowKeysPic=image.load("images/arrowKeys.png")
-arrowKeysImage=transform.scale(arrowKeysPic,(100,100))
+arrowKeysPic=image.load("images/arrowKeys.png")         #Arrow keys image in the instructions
+arrowKeysImage=transform.scale(arrowKeysPic,(100,100))  #Scaling the image
 
-cursorPic=image.load("images/cursor.png")
-cursorImage=transform.scale(cursorPic,(50,50))
+cursorPic=image.load("images/cursor.png")       #Cursor image in the squid instructions
+cursorImage=transform.scale(cursorPic,(50,50))  #Scaling the image
 
+##loading in all enemy pics
 enemyPics=[]
 for i in range(11):
     enemyPics.append("images/enemy"+str(i)+".png")
@@ -113,22 +114,27 @@ for i in range(11):
 
 font.init()
 
+## This is the music in the background
 mixer.init()
 mixer.music.load("songs/FISHY! - Main Music.mp3") #loads song
 mixer.music.play(loops=-1) #Plays song
 
-sound_effect = mixer.Sound("songs/Burp.wav")
+sound_effect = mixer.Sound("songs/Burp.wav")    #The burp sound effect
 
 def menu():
     '''
 This fuction is used to create the menu and setup its functions
     '''
+    ##If the character is fish, the menu screen changes, the background
+    ##and the title
     if player=="fish":
         screen.blit(fishyBackground,(0,0))
         myfont=font.SysFont("Comic Sans MS",40)
         title = myfont.render("FISHY", False, WHITE)
         screen.blit(title,(350,10))
-        
+
+    ##If the character is squid, the menu screen changes, the background
+    ##and the title
     if player=="squid":
         screen.blit(squidBackground,(0,0))
         myfont=font.SysFont("Comic Sans MS",40)
@@ -148,6 +154,7 @@ This fuction is used to create the menu and setup its functions
     characterSelectText = myfont.render(str("Character Select"), False, (255, 255, 255))
     screen.blit(characterSelectText,(70,450))
 
+##Highlighted when the cursor hovers over it
     if start.collidepoint(mx,my):
         draw.rect(screen,BLACK,start,1)
     if rules.collidepoint(mx,my):
@@ -158,17 +165,19 @@ This fuction is used to create the menu and setup its functions
 ##This block checks if a button was pressed and changes the game mode to that
 ##screens name
     if click==True and start.collidepoint(mx,my):
-        return "levels"
+        return "levels",0
     if click==True and rules.collidepoint(mx,my):
-        return "instructions"
+        return "instructions",0
     if click==True and character.collidepoint(mx,my):
-        return "character"
-    return "menu"
+        return "character",0
+    return "menu",0
 
 def instructions():
     '''
     This function displays the instructions of the game
     '''
+
+##This is all the text in the instruction screen, and the images displayed aswell
     screen.fill((10,192,205))
     if player=="fish":
         myfont=font.SysFont("Comic Sans MS",15)
@@ -187,7 +196,7 @@ def instructions():
         screen.blit(arrowKeysImage,(350,260))
         screen.blit(fishyPic,(250,400))
         
-
+##Diffrent set of instruction ans images than the squid
     if player=="squid":
         myfont=font.SysFont("Comic Sans MS",15)
         squidyOb = myfont.render(str("The goal of Squidy is to eat as many fish as possible, the bigger the fish the higher you score"), False, (255, 255, 255))
@@ -195,17 +204,18 @@ def instructions():
         squidyLim = myfont.render(str("There is a limit to how many fish you can eat per level, the higher the level the more fish you need to eat"), False, (255, 255, 255))
         squidyPow = myfont.render(str("Once in a while a power up will drop down, it will allow you to cross bigger fish without getting eaten"), False, (255, 255, 255))
         squidyBoss =  myfont.render(str("Be careful! There is a shark lurking about and it loves squid!"), False, (255, 255, 255))
-        squidyCon = myfont.render(str("To move the squid use the mouse and click anywhere, press the space bar to pause"), False, (255, 255, 255))
+        squidyCon = myfont.render(str("To move the squid use the mouse and click anywhere or keep pressed, press the space bar to pause"), False, (255, 255, 255))
         screen.blit(squidyOb,(50,100))
         screen.blit(squidyRu,(50,125))
         screen.blit(squidyLim,(50,150))
         screen.blit(squidyPow,(50,175))
         screen.blit(squidyBoss,(50,200))
         screen.blit(squidyCon,(50,225))
-        screen.blit(cursorImage,(100,400))
-        screen.blit(squidPic,(350,305))
+        screen.blit(cursorImage,(130,280))
+        squidImage=transform.rotate(squidPic,(-25))
+        screen.blit(squidImage,(350,270))
         
-## This block of code displays the instructions and the return button
+## This block of code displays the instructions title and the return button
     myfont=font.SysFont("Comic Sans MS",40)
     iTitle = myfont.render("Instructions", False, WHITE)
     screen.blit(iTitle,(300,20))
@@ -237,7 +247,7 @@ def characterSelect(char):
     This function checks what character the user has selected and return "fish"
     or "squid" and then that value is placed in the player variable
     '''
-    #Displays the buttos to select the character
+    #Displays the buttons to select the character
     selectFishImage=transform.scale(fishyPic,(300,150))
     screen.blit(selectFishImage,(75,250))
     selectSquidImage=transform.scale(squidLoad,(150,400))
@@ -289,9 +299,9 @@ def moveFish():
 ##  This part adds the acceleration to the velocity. Then adds the velocity
 ##  to thefish's coordinate
     vel[X] = round(accel[X])
-    fish[X] += round(vel[X])
+    fish[X] += vel[X]
     vel[Y] = round(accel[Y])
-    fish[Y] += round(vel[Y])
+    fish[Y] += vel[Y]
    
 ##  This Block of code makes the fish stay within the screen, If he crosses the
 ##  horizontal limit, he goes to the other side. If he crosses the vertical
@@ -319,7 +329,7 @@ def createEnemy():
     if len(enemy)<10:                       #Only runs if less than 10 enemies
         r=randint(0,1)                      #What side it will start from
         ew=randint(ani[W]-10,ani[W]+10)   #Random width
-        eh=int(ew/2)                        #Width divided by two
+        eh=round(ew/2)                        #Width divided by two
         ex=0                                #x value
         ey=randint(0,height-eh)             #random y value
        
@@ -394,6 +404,8 @@ def checkContact(i):
             for y in range(fish[H]):
                 if eRect.collidepoint(fish[X]+x,fish[Y]+y):
                     return True
+                
+##    This checks contact with squid, and if any pixels made contact
     if player=="squid":
         squidContactScale=transform.scale(squidPic,(fish[W],fish[H]))
         squidContact= transform.rotate(squidContactScale,squidAngle())
@@ -489,14 +501,14 @@ def growth(num):
 
 ##    This block of code checks if the previous score proportional to size is
 ##    not equal to to current score poroprtional to size. It will then grow the
-##    fish by adding 5 to the width, and to keep the fish looking like a fish
-##    the height is equal to half of the width
+##    fish by adding 5 to the width, and to keep the animal looking like a
+##    animal the height is equal to half of the width
     if prev != curr and player=="fish":
         fish[W]=fish[W]+1
-        fish[H]=int(fish[W]/2)
+        fish[H]=round(fish[W]/2)
     if prev != curr and player=="squid":
         squid[W]=squid[W]+1
-        squid[H]=int(squid[W]/2)
+        squid[H]=round(squid[W]/2)
 
 def boss():
     '''
@@ -539,7 +551,7 @@ def checkBossContact():
                    
 def bossStatus(status):
     '''
-    The boss runs for 1000 frames if you reach the end of the timer you have
+    The boss runs for 500 frames if you reach the end of the timer you have
     completed the shark
     '''
 
@@ -769,7 +781,8 @@ def moveSquid():
     This funtion is used to move the squid around the screen
     '''
 
-##    If the player has clicked then the destination at staring pos gets set
+##    If the player has clicked then the previous destination and starting
+##    points are deleted to make space for new ones
     if mb[0]==1 and sqrt((mx-squid[X])**2 + (my-squid[Y])**2)>squid[W]+20:
         del destination[:]
         del squidStart[:]
@@ -784,21 +797,29 @@ def moveSquid():
             squidStart.append(squid[X])
             squidStart.append(squid[Y])
             destination.append(atan2(destination[Y]-squidStart[Y],destination[X]-squidStart[X]))
-
-    if len(destination) != 0 :
        
 ##      This block uses trig to move the squid towards were the user clicked
 ##      it uses the angle and hen the speed is 10 so that te squid moves
+    if len(destination) != 0:
         squid[X]+=round(10*cos(destination[2]))
         squid[Y]+=round(10*sin(destination[2]))
            
 ##        Once the squid reaches, the old coordinate is erased, and the user
 ##        can then move the squid again
-        if squid[X]<destination[X]+20 and squid[X]>destination[X]-20 and squid[Y]<destination[Y]+20 and squid[Y]>destination[Y]-20:
+        if squid[X]<destination[X]+squid[W] and squid[X]>destination[X]-squid[W] and squid[Y]<destination[Y]+squid[H] and squid[Y]>destination[Y]-squid[H]:
+            del destination[:]
+            del squidStart[:]
+        if squid[X]<0 or squid[X]>width-squid[W] or squid[Y]<0 or squid[Y]>height-squid[H]:
             del destination[:]
             del squidStart[:]
            
-def pauseScreen(mode,score,limit,lev,fClick,ybo,p,st,sc,pc):        
+def pauseScreen(mode,score,limit,lev,fClick,ybo,p,st,sc,pc):
+    '''
+    This function checks activity in the pause screen, if menu is clicked then
+    the user goes to the menu, if they click restart they restart
+    '''
+
+##If an option is clicked all values are restarted
     if click==True and pauseMenu.collidepoint(mx,my):
         restart()
         return "menu",0,0,1,0,300,0,0,"pending",0
@@ -808,14 +829,29 @@ def pauseScreen(mode,score,limit,lev,fClick,ybo,p,st,sc,pc):
     return mode,score,limit,lev,fClick,ybo,p,st,sc,pc
 
 def sounds():
+    '''
+    THis function is used to make the burp sound effect when a fish is eaten
+    '''
+
+##Checking if contact was made,if so it makes the sound
     for i in range(len(enemy)):
         if checkContact(i)==True and powerTimer==0:
                 sound_effect.play()
+
+##If the power timer is on then it should't make a noise when you cross a big
+##fish
         if checkContact(i)==True and powerTimer>0:
             if size>eSize[i]:
                 sound_effect.play()
             
 def backgroundIndex(num):
+    '''
+    keeps cycling from 0-4-0, this is so the aniimation in the background can
+    keep moving
+    '''
+
+##if the index is 4 it returns 0 to reset it again, if its not 4 it adds one
+##and goes to the next index
     if num==4:
         return 0
     elif pause==1:
@@ -826,23 +862,28 @@ def backgroundIndex(num):
 
 def drawScene():
     '''
-    This draw the background and the fish
+    Draw scene draws everything which needs to be displayed during the game
     '''
+
+##These lines display the top bar, with the score,level and level bar
     screen.blit(backgroundPics[backgroundInd],(0,0))
     myfont=font.SysFont("Comic Sans MS",10)
     scr = myfont.render("SCORE", False, WHITE)
     screen.blit(scr,(390,5))
     myfont=font.SysFont("Comic Sans MS",25)
+    placeHolders=len(str(score))
     points = myfont.render(str(score), False, WHITE)
-    screen.blit(points,(400,15))
+    screen.blit(points,(placeHolders+412-(10*placeHolders),15))
     myfont=font.SysFont("Comic Sans MS",10)
     levDisplay = myfont.render("LEVEL "+str(stage), False, WHITE)
     screen.blit(levDisplay,(70,7))
-       
-    draw.rect(screen,GREEN,(10,10,50,10),1)
+
+    draw.rect(screen,GREEN,(10,10,50,10),1)#Level bar
     draw.rect(screen,GREEN,(10,10,bx,10))
-   
-    for i in range(len(enemy)):             #This draws all the enemies
+    
+##This draws all the enemies, if the enemy is facing the opposite way, it flips
+##it
+    for i in range(len(enemy)): 
         enemyPic=image.load(enemyPics[enemy[i][S]])
         if side[i]==0:
             enemyImage=transform.scale(enemyPic,(enemy[i][W],enemy[i][H]))
@@ -853,6 +894,9 @@ def drawScene():
             screen.blit(enemyImage,(enemy[i][X],enemy[i][Y]))    
 
     if player=="fish":
+        
+##This is the display for the fish. It flips it when the fish changes directio
+##and it runs thorugh the multiple colors when the power is activated
         keys=key.get_pressed()
         if keys[K_RIGHT] and keys[K_LEFT] and pause!=1:
             if accel[X]>0:
@@ -870,7 +914,8 @@ def drawScene():
         if fish[S]==1 and powerTimer==0:
             fishyImage=transform.scale(fishyPic,(fish[W],fish[H]))
             screen.blit(fishyImage,(fish[X],fish[Y]))
-
+            
+##This is the power fish animation
         if powerTimer>0:
             powerPic=image.load(powerPicsFish[colourInd])
             if fish[S]==0:
@@ -884,7 +929,8 @@ def drawScene():
            
     if player=="squid":
        
-##        This block of code is loading the image then blitting it on the screen
+##        This block of code displays the squid on the screen with the angle
+##        to the cursor
         if powerTimer==0:
             squidScale=transform.scale(squidPic,(squid[W],squid[H]))
             if pause==0:
@@ -893,6 +939,8 @@ def drawScene():
                 squidImage= transform.rotate(squidScale,0)
             screen.blit(squidImage,(squid[X],squid[Y]))
 
+##        If the power is collected this displays the power squid images, to
+##        give the power animation
         if powerTimer>0:
             powerPic=image.load(powerPicsSquid[colourInd])
             powerRot=transform.rotate(powerPic,(90))
@@ -904,6 +952,8 @@ def drawScene():
             screen.blit(powerSquidImage,(squid[X],squid[Y]))
        
     if sharkComp=="incomplete":
+##        This checks what side the animal is on so that it can look like the
+##        shark is facing it, then it displays the shark on the screen
         if player=="fish":
             ani=fish
         if player=="squid":
@@ -917,15 +967,21 @@ def drawScene():
         if shark[S]==1:
             sharkFlip=transform.flip(sharkImage,True,False)
             screen.blit(sharkFlip,(shark[X],shark[Y]))
-
+        
+##    This scales the star image then displays
     starImage=transform.scale(starPic,(star[W],star[H]))
     screen.blit(starImage,(star[X],star[Y]))
 
+##    This displays when the next level is reached, and shows what level the
+##    user is on
     if timer[1]>0:
         myfont=font.SysFont("Comic Sans MS",40)
         nextLevelText = myfont.render("LEVEL "+str(stage), False, (255,255,255))
         screen.blit(nextLevelText,(350,250))
-       
+
+##This is the pause screen, it makes an two rects the white and the outline.
+##The title is shown and it displays the menu button and the restart button,
+##with the text
     if pause==1:
         draw.rect(screen,(255,255,255),(200,100,400,400))
         draw.rect(screen,(255, 188, 125),(200,100,400,400),4)
@@ -963,15 +1019,14 @@ while running:
 
 ##    Calling all functions
     if game=="menu":
-        game=menu()
-           
+        game,pause=menu()         #displays the menu screen
        
     if game=="instructions":
-        game=instructions()
+        game=instructions() #Displays the instruction screen
 
     if game=="character":
-        game=controls()
-        player=characterSelect(player)
+        game=controls()                 #displays the control screen
+        player=characterSelect(player)  #The character select function
        
     if game=="levels":
         if player == "fish":
@@ -980,7 +1035,7 @@ while running:
                 moveFish()
             if sharkComp!="incomplete":
                 createEnemy()
-            if pause != 1 and sharkComp!="incomplete":
+            if pause != 1 and sharkComp!="incomplete":  #stops the enemies
                 moveEnemy()
             enemyLimit()
             score+=scorer()
@@ -992,7 +1047,7 @@ while running:
                 sharkComp=bossStatus(sharkComp)
             if stage==3 and sharkComp=="incomplete":
                 for i in range(len(enemy)):
-                    eRemove(i)
+                    eRemove(i)  #removes all enemies for the shark
                 if pause!=1:
                     boss()
                 sharkTimer=bossTimer(sharkTimer)
@@ -1008,7 +1063,7 @@ while running:
         if player == "squid":
             size=squid[W]*squid[H]    #Size of the fish
             if click== True and firstClick<2:
-                firstClick+=1
+                firstClick+=1               #The first click of the squid
             if firstClick==2 and pause!=1:
                 moveSquid()
             createEnemy()
@@ -1023,7 +1078,7 @@ while running:
             if stage==3:
                 sharkComp=bossStatus(sharkComp)
             if stage==3 and sharkComp=="incomplete":
-                for i in range(len(enemy)):
+                for i in range(len(enemy)):     #Removes all enemies for shark
                     eRemove(i)
                 if pause!=1:
                     boss()
@@ -1039,7 +1094,8 @@ while running:
         myClock.tick(25)
     if game=="end":
         end()
-        yBones=bonesAni(yBones)
+        yBones=bonesAni(yBones) #The bones animation
+        #Restarts all values in the game
         game,score,bx,stage,firstClick,yBones,pause,sharkTimer,sharkComp,powerTimer=gameover(game,score,bx,stage,firstClick,yBones,pause,sharkTimer,sharkComp,powerTimer)
        
     display.flip()
